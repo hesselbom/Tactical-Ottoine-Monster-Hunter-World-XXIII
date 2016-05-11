@@ -27,7 +27,7 @@ module.exports = [
     }
   },
   {
-    name: 'Palladin',
+    name: 'Paladin',
     base: {
       attack: 50,
       speed: 40,
