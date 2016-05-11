@@ -2,13 +2,36 @@ const align = require('align-text');
 const format = require('../format');
 const views = require('../views');
 const codes = require('../codes');
+const helpers = require('../helpers');
 
 var local = {};
+var potentialActions = [
+  {
+    type: 'nothing',
+    chance: 100
+  },
+  {
+    type: 'monster',
+    chance: 10
+  },
+  {
+    type: 'item',
+    chance: 1
+  }
+];
 
 function move(x, y) {
   local.user.pos.x += x;
   local.user.pos.y += y;
-  views.rewrite(that);
+
+  var action = helpers.getBasedOnChance(potentialActions);
+  switch(action.type) {
+    case 'monster':
+    case 'item':
+    default:
+      views.rewrite(that);
+      break;
+  }
 };
 
 module.exports = that = {
