@@ -8,6 +8,8 @@ process.stdin.resume();
 process.stdin.setEncoding('utf8');
 process.stdin.setRawMode(true);
 
+global.__base = __dirname + '/';
+
 process.stdin.on('data', function(key) {
   if (key === '\u0003') {
     cursor.show();

@@ -3,14 +3,14 @@ const format = require('../format');
 const views = require('../views');
 const codes = require('../codes');
 
-module.exports = that = {
+module.exports = local = {
   name: '',
 
   events: {
     [codes.ENTER]: function() {
-      if (that.name.length > 0) {
+      if (local.name.length > 0) {
         views.set('game', {
-          name: that.name,
+          name: local.name,
           pos: { x: 100, y: 50 }
         });
       }
@@ -18,13 +18,13 @@ module.exports = that = {
 
     '*': function(key, value) {
       if (value === codes.BACKSPACE) {
-        that.name = that.name.substr(0, that.name.length - 1);
+        local.name = local.name.substr(0, local.name.length - 1);
       }
       else if (format.isLetter(value)) {
-        that.name += value;
+        local.name += value;
       }
 
-      views.rewrite(that);
+      views.rewrite(local);
     }
   },
 

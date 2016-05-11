@@ -7,7 +7,7 @@ module.exports = {
   cursor: cursor,
 
   set: function(view) {
-    this.current = require('./' + view);
+    this.current = require(global.__base + 'views/' + view);
 
     format.clear();
     if (this.current.init) this.current.init.apply(this.current, [].slice.apply(arguments).slice(1));

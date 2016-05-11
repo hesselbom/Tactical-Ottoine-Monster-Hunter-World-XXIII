@@ -3,8 +3,8 @@ const format = require('../format');
 const views = require('../views');
 const codes = require('../codes');
 const helpers = require('../helpers');
+const userHelper = require('../user');
 
-var local = {};
 var potentialActions = [
   {
     type: 'nothing',
@@ -12,7 +12,7 @@ var potentialActions = [
   },
   {
     type: 'monster',
-    chance: 10
+    chance: 10000
   },
   {
     type: 'item',
@@ -27,14 +27,16 @@ function move(x, y) {
   var action = helpers.getBasedOnChance(potentialActions);
   switch(action.type) {
     case 'monster':
+      views.set('battle', local.user);
+      break;
     case 'item':
     default:
-      views.rewrite(that);
+      views.rewrite(local);
       break;
   }
 };
 
-module.exports = that = {
+module.exports = local = {
   events: {
     [codes.LEFT]:  move.bind(this, -1, 0),
     [codes.RIGHT]: move.bind(this, 1, 0),
@@ -47,9 +49,6 @@ module.exports = that = {
   },
 
   write: function(cursor) {
-    var user = local.user;
-
-    cursor.write(user.name + ' is at ('+user.pos.x+', '+user.pos.y+')');
-    cursor.hide();
+    cursor.write(userHelper.header(local.user)).hide();
   }
 };
