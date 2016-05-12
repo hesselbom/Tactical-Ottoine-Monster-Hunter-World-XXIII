@@ -1,9 +1,12 @@
 #! /usr/bin/env node
 
 const helpers = require('./helpers');
+const low = require('lowdb');
+const storage = require('lowdb/file-async');
 
-var port = 1337;
-var io = require('socket.io')(port);
+const port = 1337;
+const io = require('socket.io')(port);
+const db = low('db.json', { storage });
 
 var messages = [];
 
@@ -19,10 +22,30 @@ io.on('connection', function(socket) {
   socket.emit('data', { messages: messages.slice(-5) });
 
   socket.on('new char', function(data) {
-    user.name = data.name;
-    user.pos = { x: 100, y: 50 };
+    var exists = db('users').find({ name: data.name });
 
-    socket.emit('created', user);
+    if (exists) {
+      // TODO: Send error
+    }
+    else {
+      user.name = data.name;
+      user.pos = { x: 100, y: 50 };
+
+      db('users').push(user);
+
+      socket.emit('created', user);
+    }
+  });
+
+  socket.on('load char', function(data) {
+    user = db('users').find({ name: data.name });
+
+    if (user) {
+      socket.emit('loaded', user);
+    }
+    else {
+      // TODO: Send error
+    }
   });
 
   socket.on('move', function(x, y) {
@@ -38,6 +61,7 @@ io.on('connection', function(socket) {
       }
 
       socket.emit('moved', { pos: user.pos });
+      db.write();
     }
   });
 
