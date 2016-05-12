@@ -12,7 +12,7 @@ var potentialActions = [
   },
   {
     type: 'monster',
-    chance: 10000
+    chance: 0
   },
   {
     type: 'item',
@@ -27,7 +27,7 @@ function move(x, y) {
   var action = helpers.getBasedOnChance(potentialActions);
   switch(action.type) {
     case 'monster':
-      views.set('battle', local.user);
+      views.set('battle', local.user, local.messages);
       break;
     case 'item':
     default:
@@ -37,6 +37,16 @@ function move(x, y) {
 };
 
 module.exports = local = {
+  sockets: {
+    'chat': function(data) {
+      messages.push({ name: data.name, message: data.message });
+      if (messages.length > 5) {
+        messages.shift();
+      }
+      views.rewrite(local);
+    }
+  },
+
   events: {
     [codes.LEFT]:  move.bind(this, -1, 0),
     [codes.RIGHT]: move.bind(this, 1, 0),
@@ -46,9 +56,10 @@ module.exports = local = {
 
   init: function(user) {
     local.user = user;
+    local.messages = [];
   },
 
   write: function(cursor) {
-    cursor.write(userHelper.header(local.user)).hide();
+    cursor.write(userHelper.header(local.user, local.messages)).hide();
   }
 };

@@ -11,12 +11,13 @@ module.exports = local = {
   events: {
   },
 
-  init: function(user) {
+  init: function(user, messages) {
     local.user = user;
+    local.messages = messages;
     user.inBattle = true;
   },
 
   write: function(cursor) {
-    cursor.write(userHelper.header(local.user)).hide();
+    cursor.write(userHelper.header(local.user, local.messages)).hide();
   }
 };
