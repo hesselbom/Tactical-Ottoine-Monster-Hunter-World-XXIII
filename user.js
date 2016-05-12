@@ -1,15 +1,17 @@
 module.exports = {
-  header: function(user, messages) {
+  header: function() {
     var status = '';
 
-    if (user.inBattle) {
+    if (global.user.inBattle) {
       status = ' in battle';
     }
 
-    var header = user.name + ' is'+status+' at ('+user.pos.x+', '+user.pos.y+')\n';
+    var header = global.user.name + ' is'+status+' at ('+global.user.pos.x+', '+global.user.pos.y+')\n';
 
-    messages.forEach((msg) => {
-      header += msg.name + ': ' + msg.message + '\n';
+    if (global.messages.length > 0) header += '\n';
+
+    global.messages.forEach((msg) => {
+      header += msg.name + ' says: ' + msg.message + '\n';
     });
 
     return header;

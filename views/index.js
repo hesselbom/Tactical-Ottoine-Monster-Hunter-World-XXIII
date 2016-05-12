@@ -9,13 +9,16 @@ global.host = 'localhost';
 global.port = 1337;
 global.socket = io(global.protocol + '://' + global.host + ':' + global.port);
 
-module.exports = that = {
+module.exports = {
   current: null,
   cursor: cursor,
 
   set: function(view) {
+    var that = this;
+
     if (this.current !== null) this.unset();
     this.current = require(global.__base + 'views/' + view);
+    this.current.__id = view;
 
     format.clear();
     if (this.current.init) this.current.init.apply(this.current, [].slice.apply(arguments).slice(1));
@@ -57,9 +60,13 @@ module.exports = that = {
     var key = value.toUpperCase();
 
     if (this.current !== null && this.current.events) {
+      var returnVal = true,
+        currentId = this.current.__id;
+
       if (this.current.events[key])
-        this.current.events[key](key, value);
-      else if (this.current.events['*'])
+        returnVal = this.current.events[key](key, value);
+
+      if (this.current.events['*'] && returnVal !== false && currentId === this.current.__id)
         this.current.events['*'](key, value);
     }
   }

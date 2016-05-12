@@ -3,28 +3,31 @@ const format = require('../format');
 const views = require('../views');
 const codes = require('../codes');
 
-module.exports = local = {
+module.exports = newview = {
   name: '',
 
   events: {
     [codes.ENTER]: function() {
-      if (local.name.length > 0) {
-        views.set('game', {
-          name: local.name,
+      if (newview.name.length > 0) {
+        global.user = {
+          name: newview.name,
           pos: { x: 100, y: 50 }
-        });
+        };
+        global.socket.emit('new char', { name: global.user.name });
+        views.set('game');
       }
+      return false;
     },
 
     '*': function(key, value) {
       if (value === codes.BACKSPACE) {
-        local.name = local.name.substr(0, local.name.length - 1);
+        newview.name = newview.name.substr(0, newview.name.length - 1);
       }
       else if (format.isLetter(value)) {
-        local.name += value;
+        newview.name += value;
       }
 
-      views.rewrite(local);
+      views.rewrite(newview);
     }
   },
 

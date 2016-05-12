@@ -6,6 +6,7 @@ module.exports = {
   events: {
     'N': function() {
       views.set('new');
+      return false;
     }
   },
 

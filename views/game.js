@@ -21,29 +21,26 @@ var potentialActions = [
 ];
 
 function move(x, y) {
-  local.user.pos.x += x;
-  local.user.pos.y += y;
+  global.user.pos.x += x;
+  global.user.pos.y += y;
 
   var action = helpers.getBasedOnChance(potentialActions);
   switch(action.type) {
     case 'monster':
-      views.set('battle', local.user, local.messages);
+      views.set('battle', global.messages);
       break;
     case 'item':
     default:
-      views.rewrite(local);
+      views.rewrite(game);
       break;
   }
 };
 
-module.exports = local = {
+module.exports = game = {
   sockets: {
     'chat': function(data) {
-      messages.push({ name: data.name, message: data.message });
-      if (messages.length > 5) {
-        messages.shift();
-      }
-      views.rewrite(local);
+      global.messages = data.messages;
+      views.rewrite(game);
     }
   },
 
@@ -51,15 +48,16 @@ module.exports = local = {
     [codes.LEFT]:  move.bind(this, -1, 0),
     [codes.RIGHT]: move.bind(this, 1, 0),
     [codes.UP]:    move.bind(this, 0, -1),
-    [codes.DOWN]:  move.bind(this, 0, 1)
-  },
-
-  init: function(user) {
-    local.user = user;
-    local.messages = [];
+    [codes.DOWN]:  move.bind(this, 0, 1),
+    'C': function() {
+      views.set('entermessage');
+    }
   },
 
   write: function(cursor) {
-    cursor.write(userHelper.header(local.user, local.messages)).hide();
+    cursor.write(userHelper.header());
+    cursor.write('\n[C]hat');
+
+    cursor.hide();
   }
 };

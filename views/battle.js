@@ -5,19 +5,18 @@ const codes = require('../codes');
 const helpers = require('../helpers');
 const userHelper = require('../user');
 
-module.exports = local = {
-  user: null,
+module.exports = battle = {
+  sockets: {
+    'chat': function(data) {
+      global.messages = data.messages;
+      views.rewrite(battle);
+    }
+  },
 
   events: {
   },
 
-  init: function(user, messages) {
-    local.user = user;
-    local.messages = messages;
-    user.inBattle = true;
-  },
-
   write: function(cursor) {
-    cursor.write(userHelper.header(local.user, local.messages)).hide();
+    cursor.write(userHelper.header()).hide();
   }
 };

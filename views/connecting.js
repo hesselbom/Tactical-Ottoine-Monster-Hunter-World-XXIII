@@ -4,7 +4,8 @@ const views = require('../views');
 
 module.exports = {
   sockets: {
-    'connect': function() {
+    'data': function(data) {
+      global.messages = data.messages;
       views.set('welcome');
     }
   },

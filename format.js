@@ -7,6 +7,10 @@ module.exports = {
     return c.toUpperCase() !== c.toLowerCase();
   },
 
+  isAllowedInChat: function(c) {
+    return /[a-zåäö0-9 -.!?]/i.test(c);
+  },
+
   clear: function() {
     cursor.write('\033c');
   },
