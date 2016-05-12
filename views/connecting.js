@@ -11,7 +11,7 @@ module.exports = {
   },
 
   write: function(cursor) {
-    var url = global.protocol + '://' + global.host + ':' + global.port;
+    var url = global.config.object.protocol + '://' + global.config.object.host + ':' + global.config.object.port;
     var text = align('Connecting to '+url+'...', format.centerAlign);
 
     cursor.write( format.verticallyCenter(text) ).hide();

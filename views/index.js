@@ -3,12 +3,6 @@ const ansi = require('ansi');
 const cursor = ansi(process.stdout);
 const io = require('socket.io-client');
 
-// TODO: Fetch from some config
-global.protocol = 'http';
-global.host = 'localhost';
-global.port = 1337;
-global.socket = io(global.protocol + '://' + global.host + ':' + global.port);
-
 module.exports = {
   current: null,
   cursor: cursor,
