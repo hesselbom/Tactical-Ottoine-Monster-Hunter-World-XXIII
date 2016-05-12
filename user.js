@@ -11,7 +11,7 @@ module.exports = {
     if (global.messages.length > 0) header += '\n';
 
     global.messages.forEach((msg) => {
-      header += msg.name + ' says: ' + msg.message + '\n';
+      header += msg.name + ' said: ' + msg.message + '\n';
     });
 
     return header;

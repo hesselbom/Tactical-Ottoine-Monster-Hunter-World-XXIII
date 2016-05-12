@@ -6,9 +6,7 @@ const storage = require('lowdb/file-async');
 
 const port = 1337;
 const io = require('socket.io')(port);
-const db = low('db.json', { storage });
-
-var messages = [];
+const db = low('db.json', { storage }, false);
 
 var potentialActions = [
   { type: 'nothing', chance: 100 },
@@ -19,7 +17,7 @@ var potentialActions = [
 io.on('connection', function(socket) {
   var user = {};
 
-  socket.emit('data', { messages: messages.slice(-5) });
+  socket.emit('data', { messages: db('messages').takeRight(5) });
 
   socket.on('new char', function(data) {
     var exists = db('users').find({ name: data.name });
@@ -32,6 +30,7 @@ io.on('connection', function(socket) {
       user.pos = { x: 100, y: 50 };
 
       db('users').push(user);
+      db.write();
 
       socket.emit('created', user);
     }
@@ -66,8 +65,8 @@ io.on('connection', function(socket) {
   });
 
   socket.on('chat', function(data) {
-    messages.push({ name: user.name, message: data.message });
-    io.emit('chat', messages.slice(-5));
+    db('messages').push({ name: user.name, message: data.message });
+    io.emit('chat', db('messages').takeRight(5));
   });
 
   socket.on('disconnect', function() {
