@@ -1,17 +1,49 @@
 const format = require('../format');
 const ansi = require('ansi');
 const cursor = ansi(process.stdout);
+const io = require('socket.io-client');
 
-module.exports = {
+// TODO: Fetch from some config
+global.protocol = 'http';
+global.host = 'localhost';
+global.port = 1337;
+global.socket = io(global.protocol + '://' + global.host + ':' + global.port);
+
+module.exports = that = {
   current: null,
   cursor: cursor,
 
   set: function(view) {
+    if (this.current !== null) this.unset();
     this.current = require(global.__base + 'views/' + view);
 
     format.clear();
     if (this.current.init) this.current.init.apply(this.current, [].slice.apply(arguments).slice(1));
     this.current.write(cursor);
+
+    // Setup socket listeners
+    if (this.current.sockets) {
+      for (var key in this.current.sockets) {
+        if (this.current.sockets.hasOwnProperty(key)) {
+          (function(key) {
+            global.socket.on(key, (data) => {
+              that.current.sockets[key](data);
+            });
+          }(key));
+        }
+      }
+    }
+  },
+
+  unset: function() {
+    // Unset socket listeners
+    if (this.current !== null && this.current.sockets) {
+      for (var key in this.current.sockets) {
+        if (this.current.sockets.hasOwnProperty(key)) {
+          global.socket.off(key);
+        }
+      }
+    }
   },
 
   rewrite: function(view) {
