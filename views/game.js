@@ -5,41 +5,18 @@ const codes = require('../codes');
 const helpers = require('../helpers');
 const userHelper = require('../user');
 
-var potentialActions = [
-  {
-    type: 'nothing',
-    chance: 100
-  },
-  {
-    type: 'monster',
-    chance: 0
-  },
-  {
-    type: 'item',
-    chance: 1
-  }
-];
-
 function move(x, y) {
-  global.user.pos.x += x;
-  global.user.pos.y += y;
-
-  var action = helpers.getBasedOnChance(potentialActions);
-  switch(action.type) {
-    case 'monster':
-      views.set('battle', global.messages);
-      break;
-    case 'item':
-    default:
-      views.rewrite(game);
-      break;
-  }
+  global.socket.emit('move', x, y);
 };
 
 module.exports = game = {
   sockets: {
-    'chat': function(data) {
-      global.messages = data.messages;
+    'chat': function(messages) {
+      global.messages = messages;
+      views.rewrite(game);
+    },
+    'moved': function(data) {
+      global.user.pos = data.pos;
       views.rewrite(game);
     }
   },

@@ -6,15 +6,17 @@ const codes = require('../codes');
 module.exports = newview = {
   name: '',
 
+  sockets: {
+    'created': function(user) {
+      global.user = user;
+      views.set('game');
+    }
+  },
+
   events: {
     [codes.ENTER]: function() {
       if (newview.name.length > 0) {
-        global.user = {
-          name: newview.name,
-          pos: { x: 100, y: 50 }
-        };
-        global.socket.emit('new char', { name: global.user.name });
-        views.set('game');
+        global.socket.emit('new char', { name: newview.name });
       }
       return false;
     },
