@@ -23,4 +23,4 @@ process.stdin.on('data', function(key) {
   }
 });
 
-views.set('welcome');
+views.set('connecting');
