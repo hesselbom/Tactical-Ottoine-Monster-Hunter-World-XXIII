@@ -6,7 +6,7 @@ module.exports = {
       status = ' in battle';
     }
 
-    var header = global.user.name + ' is'+status+' at ('+global.user.pos.x+', '+global.user.pos.y+')\n';
+    var header = global.user.name + ' (' + global.user.class + ') is'+status+' at ('+global.user.pos.x+', '+global.user.pos.y+')\n';
 
     if (global.messages.length > 0) header += '\n';
 

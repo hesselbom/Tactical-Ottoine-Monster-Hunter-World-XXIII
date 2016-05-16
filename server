@@ -27,13 +27,19 @@ io.on('connection', function(socket) {
     }
     else {
       user.name = data.name;
-      user.pos = { x: 100, y: 50 };
 
-      db('users').push(user);
-      db.write();
-
-      socket.emit('created', user);
+      socket.emit('name set', user);
     }
+  });
+
+  socket.on('class set', function(data) {
+    user.class = data.class;
+    user.pos = { x: 100, y: 50 }
+
+    db('users').push(user);
+    db.write();
+
+    socket.emit('created', user);
   });
 
   socket.on('load char', function(data) {

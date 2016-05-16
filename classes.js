@@ -1,5 +1,6 @@
 module.exports = [
   {
+    char: 'F',
     name: 'Fighter',
     base: {
       attack: 70,
@@ -9,6 +10,7 @@ module.exports = [
     }
   },
   {
+    char: 'S',
     name: 'Sorcerer',
     base: {
       attack: 30,
@@ -18,6 +20,7 @@ module.exports = [
     }
   },
   {
+    char: 'R',
     name: 'Ranger',
     base: {
       attack: 40,
@@ -27,6 +30,7 @@ module.exports = [
     }
   },
   {
+    char: 'P',
     name: 'Paladin',
     base: {
       attack: 50,

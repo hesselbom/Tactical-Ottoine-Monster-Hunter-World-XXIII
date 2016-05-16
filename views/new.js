@@ -7,9 +7,9 @@ module.exports = newview = {
   name: '',
 
   sockets: {
-    'created': function(user) {
-      global.user = user;
-      views.set('game');
+    'name set': function(user) {
+      // global.user = user;
+      views.set('chooseclass');
     }
   },
 
